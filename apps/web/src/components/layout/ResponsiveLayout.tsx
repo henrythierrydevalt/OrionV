@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { usePathname } from 'next/navigation';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
@@ -10,18 +9,6 @@ interface ResponsiveLayoutProps {
 }
 
 export function ResponsiveLayout({ children }: ResponsiveLayoutProps) {
-  const pathname = usePathname();
-  const isAuthPage = pathname === '/login' || pathname === '/register';
-  const isHomePage = pathname === '/';
-
-  if (isAuthPage || isHomePage) {
-    return (
-      <div className="min-h-screen bg-background">
-        {children}
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <Header />

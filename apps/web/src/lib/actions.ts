@@ -1,6 +1,3 @@
-'use server';
-
-import { cookies } from 'next/headers';
 import { config } from './config';
 
 export async function loginAction(formData: FormData) {
@@ -12,7 +9,7 @@ export async function loginAction(formData: FormData) {
   }
 
   try {
-        const response = await fetch(`${config.api.baseUrl}/users/login`, {
+    const response = await fetch(`${config.api.baseUrl}/users/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,17 +25,12 @@ export async function loginAction(formData: FormData) {
     const data = await response.json();
     const { access_token } = data;
 
-    const cookieStore = await cookies();
-    cookieStore.set('auth-token', access_token, {
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60,
-      secure: false,
-      sameSite: 'lax'
-    });
+    document.cookie = `auth-token=${access_token}; path=/; max-age=${7 * 24 * 60 * 60}; secure=false; samesite=lax`;
 
     return { success: true };
-  } catch (error: any) {
-    return { error: error.message || 'Falha no login' };
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Falha no login';
+    return { error: errorMessage };
   }
 }
 
@@ -57,7 +49,7 @@ export async function registerAction(formData: FormData) {
   }
 
   try {
-        const response = await fetch(`${config.api.baseUrl}/users/register`, {
+    const response = await fetch(`${config.api.baseUrl}/users/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,7 +63,8 @@ export async function registerAction(formData: FormData) {
     }
 
     return { success: true };
-  } catch (error: any) {
-    return { error: error.message || 'Falha no registro' };
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Falha no registro';
+    return { error: errorMessage };
   }
 }
